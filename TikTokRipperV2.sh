@@ -1,12 +1,21 @@
 #!/bin/bash
 
+# I know this is probably the sloppiest way of doing this, but it works so ¯\_(ツ)_/¯
+
 # Create required folders
 mkdir blur
 
 # tiktok-scraper download the videos (user id is needed)
-tiktok-scraper trend -d -n 5 marblemannequin 
+tiktok-scraper trend -d -n 4 jasonderulo 
 # User IDs
-# marblemannequin elfederal007
+# marblemannequin elfederal007 jasonderulo
+
+# Move the downloaded files to the main directory
+for f in trend/*.mp4; 
+do mv trend/*.mp4 ./ ;
+done
+# Remove the unused folder
+rm -rf trend
 
 # Take the videos that are in the ./ directory and edit them to be 16/9 with a blurred background and put the blurred version in the /blur folder
 for f in *.mp4;
@@ -15,19 +24,21 @@ do
 done
 
 # Echo the name of each one of the .mp4 files in the /blur folder 
-for f in blur/*.mp4; do echo "file $f" >> file_list.txt ; done 
-# Log the file name
-for f in blur/*.mp4; do echo "file $f" >> log.txt ; done 
+for f in blur/*.mp4; 
+do echo "file $f" >> file_list.txt ; 
+done 
+# Log the file names
+for f in blur/*.mp4; 
+do echo "file $f" >> log.txt ; 
+done 
 # Concat the blurred videos together
 ffmpeg -f concat -i file_list.txt final.mp4 
 
-# Ideas to deal with the dropped frames
-
-# ffmpeg -f concat -vsync 2 -i file_list.txt final.mp4 maybe?
-# ffmpeg -i final.mp4 -vf mpdecimate,setpts=N/FRAME_RATE/TB finalNoDroppedFrames.mp4
-
+# Move the finshed file into a different directory
+mkdir final
+mv final.mp4 final/
 
 # Clean up
-# rm *.mp4
-# rm -rf blur
-# rm file_list.txt
+rm -rf *.mp4
+rm -rf blur
+rm file_list.txt
